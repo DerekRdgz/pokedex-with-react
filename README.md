@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Hola Papu, este es la mejor Pokedex, mejor que la de pouns y la de paipou.
 
 ## Available Scripts
 
