@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Pokedex - Derek
 
 Hola Papu, este es la mejor Pokedex, mejor que la de pouns y la de paipou.
 
