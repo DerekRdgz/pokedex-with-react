@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from './Navbar';
+import Navbar from './components/Navbar';
 import  { fetchAllPokemon } from './api/Pokemon';
  
 function App() {
@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <div id="container pokedex">
+      <div id="pokedex">
         <section className='text-6xl text-center py-3 font-semibold'>Pokédex</section>
         <section className='text-center font-semibold text-3xl'>Filter Section</section>
         <section className="Resultados">

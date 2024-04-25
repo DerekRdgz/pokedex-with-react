@@ -30,13 +30,48 @@
   overflow-y: auto;
 }
 
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+.animate-rainbow-text {
+  background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% 100%;
+  animation: rainbow-text 5s infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes bounce {
+  0%, 100% {
+      transform: translateY(0);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+      transform: translateY(-20px);
+  }
+}
+
+.animate-rainbow {
+  background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% 100%;
+  animation: rainbow 5s infinite;
+}
+
+@keyframes rainbow {
+  0% {
+      background-position: 0% 0%;
+  }
+  100% {
+      background-position: 100% 0%;
+  }
+}
+
+@keyframes rainbow-text {
+  0% {
+      background-position: 0% 0%;
+  }
+  100% {
+      background-position: 100% 0%;
   }
 }

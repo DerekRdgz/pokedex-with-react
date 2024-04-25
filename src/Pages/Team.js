@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import Navbar from '../Navbar';
+//Team.js
+
+import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import { db, auth } from '../components/firebase_config'; // Assuming firebase_config.js is in the same directory
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 function Team() {
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
@@ -10,8 +14,49 @@ function Team() {
   const [showTeamDetails, setShowTeamDetails] = useState(false);
   const [selectedPokemonIndex, setSelectedPokemonIndex] = useState(null);
   const [isRenaming, setIsRenaming] = useState(false);
-const [newTeamName, setNewTeamName] = useState('');
+  const [newTeamName, setNewTeamName] = useState('');
+  const [isLoadingTeams, setIsLoadingTeams] = useState(true);
 
+
+  const fetchTeams = async (uid) => {
+    setIsLoadingTeams(true);
+    const userRef = doc(db, "users", uid);
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists() && docSnap.data().teams) {
+      setTeams(docSnap.data().teams);
+    } else {
+      setTeams([]);
+    }
+    setIsLoadingTeams(false); 
+  };
+
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      fetchTeams(auth.currentUser.uid);
+    } else {
+      setIsLoadingTeams(false); // Not loading if not logged in
+    }
+  }, []);
+
+
+
+
+  const saveProfile = async () => {
+    if (auth.currentUser) {
+      try {
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        await setDoc(userRef, { teams });
+        alert('Profile saved successfully!');
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        alert('Failed to save profile.');
+      }
+    } else {
+      alert('You must be logged in to save your profile.');
+    }
+  };
 
   const createNewTeam = () => {
     if (teams.length >= 10) {
@@ -41,12 +86,24 @@ const [newTeamName, setNewTeamName] = useState('');
     setSelectedTeamIndex(index);
     setShowTeamDetails(true);
   };
-
   const addToTeam = () => {
-    if (teams[selectedTeamIndex].pokemons.length >= 6) {
+    if (!pokemonData) {
+      alert('No Pokémon selected, Please search for a Pokémon first.')
+      return;
+    }
+
+    const currentTeam = teams[selectedTeamIndex].pokemons;
+  
+    if (currentTeam.some(pokemon => pokemon.name === pokemonData.name)) {
+      alert('This Pokémon is already in your team.');
+      return;
+    }
+  
+    if (currentTeam.length >= 6) {
       alert('Six Pokémon in the Team already.');
       return;
     }
+  
     const updatedTeams = [...teams];
     updatedTeams[selectedTeamIndex].pokemons.push(pokemonData);
     setTeams(updatedTeams);
@@ -120,7 +177,9 @@ const [newTeamName, setNewTeamName] = useState('');
   return (
     <>
       <Navbar />
-      {!isCreatingTeam ? (
+      {isLoadingTeams ? (
+        <div className="text-center py-3">Loading teams...</div>
+      ) : (!isCreatingTeam && (teams.length === 1 && teams[0].pokemons.length === 0)) ? (
         <section className='text-6xl text-center py-3 font-semibold'>
           It looks like you don't have a team, create one!
           <div className='flex items-center justify-center'>
@@ -261,10 +320,16 @@ const [newTeamName, setNewTeamName] = useState('');
                   </button>
                   <button
                     onClick={addToTeam}
-                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-3"
+                    className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded mx-3"
                   >
                     Add to Team
                   </button>
+                  <button
+              onClick={saveProfile}
+              className="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded"
+            >
+              Save Profile
+            </button>
                 </div>
               </>
             )}

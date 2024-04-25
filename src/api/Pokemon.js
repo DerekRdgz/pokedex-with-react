@@ -1,5 +1,3 @@
-// pokemonService.js
-
 const getPokemon = async (num) => {
     let url = 'https://pokeapi.co/api/v2/pokemon/' + num.toString();
     let res = await fetch(url);
